@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { QueryString } from '../../shared/types'
 import paginatedList from '../../utils/paginatedList'
 import { PaginatedList } from '../../utils/paginatedList/types'
@@ -42,6 +42,16 @@ export class UsersProvider {
       return user
     } catch (e) {
       throw new BadRequestException(e)
+    }
+  }
+
+  async delete (userId:number): Promise<void> {
+    const user = await User.findOne(userId)
+    if (!user) throw new NotFoundException('User not found.')
+    try {
+      await user.remove()
+    } catch (e) {
+      throw new InternalServerErrorException()
     }
   }
 }

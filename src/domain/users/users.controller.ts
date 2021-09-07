@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common'
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { QueryString } from '../../shared/types'
 import { PaginatedList } from '../../utils/paginatedList/types'
 import { BadRequestCreateUserDTO } from './dto/BadRequestCreateUserDTO'
@@ -42,10 +42,19 @@ export class UsersController {
 
   @Put(':userId')
   @ApiOkResponse({ description: 'Retrieve the updated user', type: ShowUserResponseDTO })
-  @ApiBadRequestResponse({ description: 'Occurred errors trying to create user.', type: BadRequestCreateUserDTO })
+  @ApiBadRequestResponse({ description: 'Occurred errors trying to update user.', type: BadRequestCreateUserDTO })
   @ApiNotFoundResponse({ description: 'User not found.', type: UserNotFoundDTO })
   @ApiOperation({ description: 'Update an User.' })
   async edit (@Param('userId') userId: number, @Body() editUserDTO: EditUserDTO): Promise<User> {
     return this.usersProvider.edit(userId, editUserDTO)
+  }
+
+  @Delete(':userId')
+  @ApiNoContentResponse({ description: 'No body' })
+  @ApiInternalServerErrorResponse({ description: 'Occurred errors trying to delete used' })
+  @ApiNotFoundResponse({ description: 'User not found.', type: UserNotFoundDTO })
+  @ApiOperation({ description: 'Delete an User.' })
+  async delete (@Param('userId') userId: number): Promise<void> {
+    return this.usersProvider.delete(userId)
   }
 }
