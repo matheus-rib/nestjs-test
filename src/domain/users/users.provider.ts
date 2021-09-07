@@ -4,6 +4,7 @@ import paginatedList from '../../utils/paginatedList'
 import { PaginatedList } from '../../utils/paginatedList/types'
 import queryPaginationStandardizer from '../../utils/queryPaginationStandardizer'
 import { CreateUserDTO } from './dto/CreateUserDTO'
+import { EditUserDTO } from './dto/EditUserDTO'
 import { User } from './entities/user.entity'
 
 @Injectable()
@@ -26,6 +27,18 @@ export class UsersProvider {
   async store (createUserDTO: CreateUserDTO): Promise<User> {
     try {
       const user = await User.create(createUserDTO).save()
+      return user
+    } catch (e) {
+      throw new BadRequestException(e)
+    }
+  }
+
+  async edit (userId: number, editUserDTO: EditUserDTO): Promise<User> {
+    const user = await User.findOne(userId)
+    if (!user) throw new NotFoundException('User not found.')
+    try {
+      user.setAttributes(editUserDTO)
+      await user.save()
       return user
     } catch (e) {
       throw new BadRequestException(e)

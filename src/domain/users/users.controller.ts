@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common'
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { QueryString } from '../../shared/types'
 import { PaginatedList } from '../../utils/paginatedList/types'
 import { BadRequestCreateUserDTO } from './dto/BadRequestCreateUserDTO'
 import { CreateUserDTO } from './dto/CreateUserDTO'
+import { EditUserDTO } from './dto/EditUserDTO'
 import { IndexUsersResponseDTO } from './dto/IndexUsersResponseDTO'
 import { ShowUserResponseDTO } from './dto/ShowUserResponseDTO'
 import { UserNotFoundDTO } from './dto/UserNotFoundDTO'
@@ -31,9 +32,17 @@ export class UsersController {
   }
 
   @Post()
-  @ApiOkResponse({ description: 'Retrieve the created user', type: ShowUserResponseDTO })
+  @ApiCreatedResponse({ description: 'Retrieve the created user', type: ShowUserResponseDTO })
   @ApiBadRequestResponse({ description: 'Occurred errors trying to create user.', type: BadRequestCreateUserDTO })
   async store (@Body() createUserDTO: CreateUserDTO): Promise<User> {
     return this.usersProvider.store(createUserDTO)
+  }
+
+  @Put(':userId')
+  @ApiOkResponse({ description: 'Retrieve the updated user', type: ShowUserResponseDTO })
+  @ApiBadRequestResponse({ description: 'Occurred errors trying to create user.', type: BadRequestCreateUserDTO })
+  @ApiNotFoundResponse({ description: 'User not found.', type: UserNotFoundDTO })
+  async edit (@Param('userId') userId: number, @Body() editUserDTO: EditUserDTO): Promise<User> {
+    return this.usersProvider.edit(userId, editUserDTO)
   }
 }
