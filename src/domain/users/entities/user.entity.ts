@@ -1,3 +1,4 @@
+import { IsEmail } from 'class-validator'
 import { Column, Entity } from 'typeorm'
 import { BaseEntity } from '../../../common/orm/BaseEntity'
 
@@ -7,5 +8,6 @@ export class User extends BaseEntity {
   name: string
 
   @Column({ type: 'varchar', length: '30', unique: true })
+  @IsEmail()
   email: string
 }
