@@ -1,12 +1,12 @@
 import { INestApplication } from '@nestjs/common'
 import * as request from 'supertest'
 import { createConnection } from 'typeorm'
+import ormConfig from '../../../../../src/config/typeorm'
 import { User } from '../../../../../src/domain/users/entities/user.entity'
 import { UsersController } from '../../../../../src/domain/users/users.controller'
 import { UsersProvider } from '../../../../../src/domain/users/users.provider'
 import ApiFactory from '../../../../factories/ApiFactory'
 import UsersFactory from '../../../../factories/UserFactory'
-import ormConfig from '../../../../../src/config/typeorm'
 
 let app: INestApplication
 let connection = null

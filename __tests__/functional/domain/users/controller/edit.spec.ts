@@ -1,4 +1,5 @@
 import { INestApplication } from '@nestjs/common'
+import * as faker from 'faker'
 import * as request from 'supertest'
 import { createConnection } from 'typeorm'
 import ormConfig from '../../../../../src/config/typeorm'
@@ -12,7 +13,6 @@ let app: INestApplication
 let connection = null
 
 let user: User = null
-
 beforeAll(async () => {
   connection = await createConnection(ormConfig)
   const controllers = [UsersController]
@@ -27,17 +27,30 @@ afterAll(async () => {
   await connection.close()
 })
 
-it('Should return a user', async () => {
-  const { body, status } = await request(app.getHttpServer()).get(`/users/${user.id}`)
+it('Should update and return User', async () => {
+  const params = {
+    name: faker.name.firstName(),
+    email: faker.internet.email(),
+  }
+  const { body, status } = await request(app.getHttpServer()).put(`/users/${user.id}`).send(params)
 
   expect(status).toBe(200)
   expect(body).toEqual(
-    expect.objectContaining({ id: user.id, name: user.name, email: user.email }),
+    expect.objectContaining({ name: params.name, email: params.email }),
+  )
+
+  const storedUser = await User.findOne(user.id)
+  expect(body).toEqual(
+    expect.objectContaining({ name: storedUser.name, email: storedUser.email }),
   )
 })
 
 it('Should return a not found user error', async () => {
-  const { body, status } = await request(app.getHttpServer()).get(`/users/${user.id}123`)
+  const params = {
+    name: faker.name.firstName(),
+    email: faker.internet.email(),
+  }
+  const { body, status } = await request(app.getHttpServer()).put(`/users/${user.id}123`).send(params)
 
   expect(status).toBe(404)
 
