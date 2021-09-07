@@ -1,0 +1,7 @@
+{
+  "name": "nestjs-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Matheus Ribeiro <matt.ribeiro14@outlook.com>",
+  "license": "MIT"
+}
