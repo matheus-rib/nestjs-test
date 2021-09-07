@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query } from '@nestjs/common'
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { QueryString } from '../../shared/types'
 import { PaginatedList } from '../../utils/paginatedList/types'
@@ -54,6 +54,7 @@ export class UsersController {
   @ApiInternalServerErrorResponse({ description: 'Occurred errors trying to delete used' })
   @ApiNotFoundResponse({ description: 'User not found.', type: UserNotFoundDTO })
   @ApiOperation({ description: 'Delete an User.' })
+  @HttpCode(HttpStatus.NO_CONTENT)
   async delete (@Param('userId') userId: number): Promise<void> {
     return this.usersProvider.delete(userId)
   }
