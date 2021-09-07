@@ -26,6 +26,7 @@ export class UsersController {
 
   @ApiOkResponse({ description: 'Retrieve the user by the Id.', type: ShowUserResponseDTO })
   @ApiNotFoundResponse({ description: 'User not found.', type: UserNotFoundDTO })
+  @ApiOperation({ description: 'Retrieve a single User.' })
   @Get(':userId')
   async show (@Param('userId') userId: number): Promise<User> {
     return this.usersProvider.show(userId)
@@ -34,6 +35,7 @@ export class UsersController {
   @Post()
   @ApiCreatedResponse({ description: 'Retrieve the created user', type: ShowUserResponseDTO })
   @ApiBadRequestResponse({ description: 'Occurred errors trying to create user.', type: BadRequestCreateUserDTO })
+  @ApiOperation({ description: 'Create an User.' })
   async store (@Body() createUserDTO: CreateUserDTO): Promise<User> {
     return this.usersProvider.store(createUserDTO)
   }
@@ -42,6 +44,7 @@ export class UsersController {
   @ApiOkResponse({ description: 'Retrieve the updated user', type: ShowUserResponseDTO })
   @ApiBadRequestResponse({ description: 'Occurred errors trying to create user.', type: BadRequestCreateUserDTO })
   @ApiNotFoundResponse({ description: 'User not found.', type: UserNotFoundDTO })
+  @ApiOperation({ description: 'Update an User.' })
   async edit (@Param('userId') userId: number, @Body() editUserDTO: EditUserDTO): Promise<User> {
     return this.usersProvider.edit(userId, editUserDTO)
   }
